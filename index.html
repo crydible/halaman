@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal Web</title>
     <style>
-        /* Desain Background Animasi */
+        /* ==========================================
+           1. Desain Background Slide Show Transisi Buram
+           ========================================== */
         body { 
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
             display: flex; 
@@ -13,19 +15,65 @@
             align-items: center; 
             height: 100vh; 
             margin: 0; 
-            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
             color: #fff;
+            overflow: hidden; /* Mencegah scrollbar */
         }
 
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        /* Wadah untuk slide show */
+        .background-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
         }
 
-        /* Desain Glassmorphism (Efek Kaca) */
+        /* Setiap slide */
+        .bg-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0; /* Mulai tidak terlihat */
+            filter: blur(15px); /* Mulai buram */
+            animation: slideShow 20s ease-in-out infinite; /* Total siklus 20s untuk 4 gambar */
+        }
+
+        /* Menghubungkan setiap gambar yang Anda berikan */
+        .slide1 { 
+            background-image: url('image_0.png'); 
+            animation-delay: 0s; 
+        }
+        .slide2 { 
+            background-image: url('image_1.png'); 
+            animation-delay: 5s; 
+        }
+        .slide3 { 
+            background-image: url('image_2.png'); 
+            animation-delay: 10s; 
+        }
+        .slide4 { 
+            background-image: url('image_3.png'); 
+            animation-delay: 15s; 
+        }
+
+        /* Keyframes untuk transisi buram dan pudar (opacity) */
+        @keyframes slideShow {
+            0% { opacity: 0; filter: blur(15px); }
+            5% { opacity: 1; filter: blur(0px); } /* Pudar masuk dan buram hilang */
+            20% { opacity: 1; filter: blur(0px); } /* Tampil penuh */
+            25% { opacity: 0; filter: blur(15px); } /* Pudar keluar dan buram muncul kembali */
+            100% { opacity: 0; filter: blur(15px); }
+        }
+
+        /* ==========================================
+           2. Desain UI Glassmorphism (Kaca)
+           ========================================== */
         .container { 
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(15px); 
@@ -36,6 +84,8 @@
             box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
             text-align: center; 
             width: 320px; 
+            position: relative; /* Untuk memastikan wadah di atas background */
+            z-index: 10;
         }
 
         .hidden { display: none !important; }
@@ -95,6 +145,13 @@
 </head>
 <body>
 
+    <div class="background-container">
+        <div class="bg-slide slide1"></div>
+        <div class="bg-slide slide2"></div>
+        <div class="bg-slide slide3"></div>
+        <div class="bg-slide slide4"></div>
+    </div>
+
     <div id="menu-utama" class="container">
         <h2>Pilih Akses</h2>
         <button onclick="bukaHalaman('pengunjung')">Masuk sebagai Pengunjung</button>
@@ -104,4 +161,115 @@
     <div id="login-admin" class="container hidden">
         <h2>Login Admin</h2>
         <input type="text" id="username" placeholder="Username">
-        <input type="password" id="password"
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="prosesLogin()">Masuk</button>
+        <button onclick="kembaliKeMenu()" class="btn-kembali">Kembali</button>
+        <p id="pesan-error" class="pesan-error">Username atau Password salah!</p>
+    </div>
+
+    <div id="dashboard-pengunjung" class="container hidden">
+        <h2>Menu Pengunjung</h2>
+        <div id="daftar-link-pengunjung"></div>
+        <button onclick="kembaliKeMenu()" class="btn-kembali" style="margin-top: 20px;">Kembali</button>
+    </div>
+
+    <div id="dashboard-admin" class="container hidden">
+        <h2>Menu Admin</h2>
+        <div id="daftar-link-admin"></div>
+        <button onclick="keluarAdmin()" class="btn-keluar">Keluar</button>
+    </div>
+
+    <script>
+        // ==========================================
+        // PENGATURAN LINK ADA DI SINI
+        // Kosongkan bagian url (url: "") jika tombol tidak ingin ditampilkan
+        // ==========================================
+
+        const dataPengunjung = [
+            { nama: "Google", url: "https://google.com" },
+            { nama: "Link Pengunjung 2", url: "" }, // Tombol ini tidak akan muncul
+            { nama: "Link Pengunjung 3", url: "" },
+            { nama: "Link Pengunjung 4", url: "" },
+            { nama: "Link Pengunjung 5", url: "" }
+        ];
+
+        const dataAdmin = [
+            { nama: "GitHub Pages", url: "https://github.com" },
+            { nama: "Link Admin 2", url: "" }, // Tombol ini tidak akan muncul
+            { nama: "Link Admin 3", url: "" },
+            { nama: "Link Admin 4", url: "" },
+            { nama: "Link Admin 5", url: "" },
+            { nama: "Link Admin 6", url: "" },
+            { nama: "Link Admin 7", url: "" },
+            { nama: "Link Admin 8", url: "" },
+            { nama: "Link Admin 9", url: "" },
+            { nama: "Link Admin 10", url: "" }
+        ];
+
+        // Fungsi untuk membuat tombol secara otomatis
+        function buatTombol(data, elemenId) {
+            const wadah = document.getElementById(elemenId);
+            wadah.innerHTML = ""; // Bersihkan isi sebelumnya
+            
+            data.forEach(item => {
+                if (item.url !== "") {
+                    const link = document.createElement("a");
+                    link.href = item.url;
+                    link.target = "_blank"; // Membuka link di tab baru
+                    link.className = "link-tombol";
+                    link.innerText = item.nama;
+                    wadah.appendChild(link);
+                }
+            });
+        }
+
+        // ==========================================
+        // LOGIKA PINDAH HALAMAN
+        // ==========================================
+
+        function sembunyikanSemua() {
+            document.getElementById('menu-utama').classList.add('hidden');
+            document.getElementById('login-admin').classList.add('hidden');
+            document.getElementById('dashboard-pengunjung').classList.add('hidden');
+            document.getElementById('dashboard-admin').classList.add('hidden');
+            document.getElementById('pesan-error').style.display = 'none';
+        }
+
+        function bukaHalaman(halaman) {
+            sembunyikanSemua();
+            if (halaman === 'pengunjung') {
+                buatTombol(dataPengunjung, 'daftar-link-pengunjung');
+                document.getElementById('dashboard-pengunjung').classList.remove('hidden');
+            } else if (halaman === 'login') {
+                document.getElementById('login-admin').classList.remove('hidden');
+            }
+        }
+
+        function kembaliKeMenu() {
+            sembunyikanSemua();
+            document.getElementById('menu-utama').classList.remove('hidden');
+        }
+
+        function prosesLogin() {
+            let user = document.getElementById('username').value;
+            let pass = document.getElementById('password').value;
+
+            // Username dan password admin
+            if (user === "admin" && pass === "1234") {
+                sembunyikanSemua();
+                buatTombol(dataAdmin, 'daftar-link-admin');
+                document.getElementById('dashboard-admin').classList.remove('hidden');
+            } else {
+                document.getElementById('pesan-error').style.display = 'block';
+            }
+        }
+
+        function keluarAdmin() {
+            kembaliKeMenu();
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+        }
+    </script>
+
+</body>
+</html>
