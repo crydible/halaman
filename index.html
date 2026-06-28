@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Web</title>
+    <style>
+        /* Desain Background Animasi */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Desain Glassmorphism (Efek Kaca) */
+        .container { 
+            background: rgba(255, 255, 255, 0.1); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3); 
+            text-align: center; 
+            width: 320px; 
+        }
+
+        .hidden { display: none !important; }
+
+        input, button, .link-tombol { 
+            width: 100%; 
+            margin: 8px 0; 
+            padding: 12px; 
+            box-sizing: border-box; 
+            border-radius: 8px;
+            font-size: 15px;
+            transition: all 0.3s ease;
+        }
+
+        input { 
+            border: 1px solid rgba(255, 255, 255, 0.5); 
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            outline: none;
+        }
+
+        input::placeholder { color: #ddd; }
+        
+        input:focus { background: rgba(255, 255, 255, 0.3); }
+
+        button { 
+            cursor: pointer; 
+            background-color: rgba(255, 255, 255, 0.2); 
+            color: white; 
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            font-weight: bold;
+        }
+
+        button:hover { 
+            background-color: rgba(255, 255, 255, 0.4); 
+            transform: translateY(-2px);
+        }
+
+        .link-tombol { 
+            display: block; 
+            text-decoration: none; 
+            background: rgba(40, 167, 69, 0.8); 
+            color: white; 
+            font-weight: bold;
+            border: none;
+        }
+
+        .link-tombol:hover { background: rgba(40, 167, 69, 1); transform: translateY(-2px); }
+        .btn-kembali { background-color: rgba(108, 117, 125, 0.8); }
+        .btn-kembali:hover { background-color: rgba(108, 117, 125, 1); }
+        .btn-keluar { background-color: rgba(220, 53, 69, 0.8); margin-top: 25px; }
+        .btn-keluar:hover { background-color: rgba(220, 53, 69, 1); }
+        
+        h2 { margin-top: 0; font-weight: 600; letter-spacing: 1px; }
+        .pesan-error { color: #ffd1d1; display: none; font-size: 14px; margin-top: 10px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="menu-utama" class="container">
+        <h2>Pilih Akses</h2>
+        <button onclick="bukaHalaman('pengunjung')">Masuk sebagai Pengunjung</button>
+        <button onclick="bukaHalaman('login')">Masuk sebagai Admin</button>
+    </div>
+
+    <div id="login-admin" class="container hidden">
+        <h2>Login Admin</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password"
