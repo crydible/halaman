@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Web</title>
+    <style>
+        body { 
+            font-family: sans-serif; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            background-color: #f4f4f4; 
+            margin: 0; 
+        }
+        .container { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1); 
+            text-align: center; 
+            width: 320px; 
+        }
+        .hidden { display: none; }
+        input, button { 
+            width: 100%; 
+            margin: 10px 0; 
+            padding: 10px; 
+            box-sizing: border-box; 
+            border-radius: 4px;
+        }
+        input { border: 1px solid #ccc; }
+        button { 
+            cursor: pointer; 
+            background-color: #007bff; 
+            color: white; 
+            border: none; 
+            font-weight: bold;
+        }
+        button:hover { background-color: #0056b3; }
+        .btn-kembali { background-color: #6c757d; }
+        .btn-kembali:hover { background-color: #5a6268; }
+        .btn-keluar { background-color: #dc3545; }
+        .btn-keluar:hover { background-color: #c82333; }
+        .link-tombol { 
+            display: block; 
+            text-decoration: none; 
+            background: #28a745; 
+            color: white; 
+            padding: 12px; 
+            border-radius: 4px; 
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .link-tombol:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+    <div id="menu-utama" class="container">
+        <h2>Pilih Akses</h2>
+        <button onclick="aksesPengunjung()">Masuk sebagai Pengunjung</button>
+        <button onclick="tampilLoginAdmin()">Masuk sebagai Admin</button>
+    </div>
+
+    <div id="login-admin" class="container hidden">
+        <h2>Login Admin</h2>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="prosesLogin()">Masuk</button>
+        <button onclick="kembaliKeMenu()" class="btn-kembali">Kembali</button>
+        <p id="pesan-error" style="color: red; display: none; font-size: 14px;">Username atau Password salah!</p>
+    </div>
+
+    <div id="dashboard-admin" class="container hidden">
+        <h2>Menu Admin</h2>
+        <p>Pilih tujuan link di bawah ini:</p>
+        
+        <a href="https://link-pertama-kamu.com" class="link-tombol" target="_blank">Link Pertama</a>
+        <a href="https://link-kedua-kamu.com" class="link-tombol" target="_blank">Link Kedua</a>
+        
+        <button onclick="keluar()" class="btn-keluar" style="margin-top: 20px;">Keluar</button>
+    </div>
+
+    <script>
+        function aksesPengunjung() {
+            // Ganti URL ini dengan web tujuan untuk pengunjung
+            window.location.href = "https://google.com";
+        }
+
+        function tampilLoginAdmin() {
+            document.getElementById('menu-utama').classList.add('hidden');
+            document.getElementById('login-admin').classList.remove('hidden');
+        }
+
+        function kembaliKeMenu() {
+            document.getElementById('login-admin').classList.add('hidden');
+            document.getElementById('menu-utama').classList.remove('hidden');
+            document.getElementById('pesan-error').style.display = 'none';
+        }
+
+        function prosesLogin() {
+            let user = document.getElementById('username').value;
+            let pass = document.getElementById('password').value;
+
+            // Ganti "admin" dan "1234" dengan username/password yang kamu mau
+            if (user === "admin" && pass === "1234") {
+                document.getElementById('login-admin').classList.add('hidden');
+                document.getElementById('dashboard-admin').classList.remove('hidden');
+                document.getElementById('pesan-error').style.display = 'none';
+            } else {
+                document.getElementById('pesan-error').style.display = 'block';
+            }
+        }
+
+        function keluar() {
+            document.getElementById('dashboard-admin').classList.add('hidden');
+            document.getElementById('menu-utama').classList.remove('hidden');
+            document.getElementById('username').value = "";
+            document.getElementById('password').value = "";
+        }
+    </script>
+
+</body>
+</html>
